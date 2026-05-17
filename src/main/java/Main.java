@@ -7,15 +7,25 @@ public class Main {
 
         UsuarioService service = new UsuarioService();
 
-        Usuario usuario = new Usuario(
+        Usuario usuario1 = new Usuario(
                 1,
                 "Gabriela",
-                "12345",
+                "123",
                 "gabriela@email.com",
                 "123"
         );
 
-        service.cadastrarUsuario(usuario);
+        Usuario usuario2 = new Usuario(
+                2,
+                "Luize",
+                "124",
+                "luize@email.com",
+                "456"
+        );
+
+        service.cadastrarUsuario(usuario1);
+
+        service.cadastrarUsuario(usuario2);
 
     }
 

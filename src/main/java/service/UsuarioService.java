@@ -29,6 +29,11 @@ public class UsuarioService {
             throw new IllegalArgumentException("Email já cadastrado.");
         }
 
+        if (repository.buscarPorId(usuario.getId()) != null) {
+
+            throw new IllegalArgumentException("ID já cadastrado.");
+        }
+
         repository.salvar(usuario);
 
         System.out.println("Usuário cadastrado com sucesso!");

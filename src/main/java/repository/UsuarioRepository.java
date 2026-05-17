@@ -7,7 +7,7 @@ import model.Usuario;
 
 public class UsuarioRepository {
 
-    private List<Usuario> usuarios = new ArrayList<>();
+    private static List<Usuario> usuarios = new ArrayList<>();
 
     public void salvar(Usuario usuario) {
         usuarios.add(usuario);
@@ -31,6 +31,19 @@ public class UsuarioRepository {
         for (Usuario usuario : usuarios) {
 
             if (usuario.getMatricula().equals(matricula)) {
+                return usuario;
+            }
+
+        }
+
+        return null;
+    }
+
+    public Usuario buscarPorId(int id) {
+
+        for (Usuario usuario : usuarios) {
+
+            if (usuario.getId() == id) {
                 return usuario;
             }
 
