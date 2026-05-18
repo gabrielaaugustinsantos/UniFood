@@ -1,0 +1,14 @@
+target/
+
+*.class
+*.jar
+
+.idea/
+.vscode/
+
+.env
+
+out/
+build/
+
+*.log

@@ -1,10 +1,13 @@
+ feature/cadastro-usuario
 import model.Usuario;
 import service.UsuarioService;
 
+ main
 public class Main {
 
     public static void main(String[] args) {
 
+ feature/cadastro-usuario
         UsuarioService service = new UsuarioService();
 
         Usuario usuario1 = new Usuario(
@@ -26,6 +29,9 @@ public class Main {
         service.cadastrarUsuario(usuario1);
 
         service.cadastrarUsuario(usuario2);
+
+        System.out.println("UniFood iniciado com sucesso!");
+ main
 
     }
 
