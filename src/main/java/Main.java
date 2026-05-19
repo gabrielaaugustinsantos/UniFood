@@ -1,13 +1,12 @@
- feature/cadastro-usuario
+import handler.CardapioHandler;
 import model.Usuario;
+import service.LoginService;
 import service.UsuarioService;
 
- main
 public class Main {
 
     public static void main(String[] args) {
 
- feature/cadastro-usuario
         UsuarioService service = new UsuarioService();
 
         Usuario usuario1 = new Usuario(
@@ -21,7 +20,7 @@ public class Main {
         Usuario usuario2 = new Usuario(
                 2,
                 "Luize",
-                "124",
+                "456",
                 "luize@email.com",
                 "456"
         );
@@ -30,8 +29,20 @@ public class Main {
 
         service.cadastrarUsuario(usuario2);
 
-        System.out.println("UniFood iniciado com sucesso!");
- main
+        LoginService loginService = new LoginService();
+
+        boolean login = loginService.validarLogin(
+                "gabriela@email.com",
+                "123"
+        );
+
+        System.out.println("Login realizado: " + login);
+
+        // Teste do cardápio
+
+        CardapioHandler cardapio = new CardapioHandler();
+
+        cardapio.listarCardapio();
 
     }
 
