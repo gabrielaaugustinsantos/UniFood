@@ -12,3 +12,7 @@ out/
 build/
 
 *.log
+
+database/
+*.mv.db
+*.trace.db
