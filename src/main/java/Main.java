@@ -1,8 +1,12 @@
 import handler.CardapioHandler;
+import handler.RelatorioHandler;
+import model.HistoricoConsumo;
 import model.Refeicao;
 import model.Usuario;
+import repository.HistoricoRepository;
 import service.ConsumoService;
 import service.LoginService;
+import service.RelatorioService;
 import service.UsuarioService;
 
 public class Main {
@@ -30,8 +34,9 @@ public class Main {
         );
 
         service.cadastrarUsuario(usuario1);
-
         service.cadastrarUsuario(usuario2);
+
+        // Teste de Login
 
         LoginService loginService = new LoginService();
 
@@ -42,13 +47,13 @@ public class Main {
 
         System.out.println("Login realizado: " + login);
 
-        // Teste do cardápio
+        // Teste do Cardápio
 
         CardapioHandler cardapio = new CardapioHandler();
 
         cardapio.listarCardapio();
 
-        // Teste de consumo de refeição
+        // Teste de Consumo de Refeição
 
         Refeicao refeicao = new Refeicao(
                 "Almoço",
@@ -63,6 +68,35 @@ public class Main {
                 usuario1,
                 refeicao
         );
+
+        // Teste do Histórico e Relatório
+
+        HistoricoRepository historicoRepository =
+                new HistoricoRepository();
+
+        historicoRepository.adicionarHistorico(
+                new HistoricoConsumo(
+                        "Gabriela",
+                        "Almoço",
+                        "20/05/2026"
+                )
+        );
+
+        historicoRepository.adicionarHistorico(
+                new HistoricoConsumo(
+                        "Luize",
+                        "Jantar",
+                        "20/05/2026"
+                )
+        );
+
+        RelatorioService relatorioService =
+                new RelatorioService(historicoRepository);
+
+        RelatorioHandler relatorioHandler =
+                new RelatorioHandler(relatorioService);
+
+        relatorioHandler.exibirRelatorio();
 
     }
 
