@@ -1,5 +1,7 @@
 import handler.CardapioHandler;
+import model.Refeicao;
 import model.Usuario;
+import service.ConsumoService;
 import service.LoginService;
 import service.UsuarioService;
 
@@ -14,7 +16,8 @@ public class Main {
                 "Gabriela",
                 "123",
                 "gabriela@email.com",
-                "123"
+                "123",
+                30.0
         );
 
         Usuario usuario2 = new Usuario(
@@ -22,7 +25,8 @@ public class Main {
                 "Luize",
                 "456",
                 "luize@email.com",
-                "456"
+                "456",
+                20.0
         );
 
         service.cadastrarUsuario(usuario1);
@@ -43,6 +47,22 @@ public class Main {
         CardapioHandler cardapio = new CardapioHandler();
 
         cardapio.listarCardapio();
+
+        // Teste de consumo de refeição
+
+        Refeicao refeicao = new Refeicao(
+                "Almoço",
+                "Arroz, feijão e carne",
+                5.0,
+                10
+        );
+
+        ConsumoService consumoService = new ConsumoService();
+
+        consumoService.registrarConsumo(
+                usuario1,
+                refeicao
+        );
 
     }
 

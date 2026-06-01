@@ -30,8 +30,6 @@ main → produção
 
 develop → integração
 
-feature/* → funcionalidades
-
 ## Configuração
 
 Clone o projeto:
