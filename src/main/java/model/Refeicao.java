@@ -8,17 +8,15 @@ public class Refeicao {
     private int quantidade;
 
     public Refeicao(
-        String nome,
-        String descricao,
-        double valor,
-        int quantidade
+            String nome,
+            String descricao,
+            double valor,
+            int quantidade
     ) {
-
         this.nome = nome;
         this.descricao = descricao;
         this.valor = valor;
         this.quantidade = quantidade;
-
     }
 
     public String getNome() {
@@ -37,4 +35,7 @@ public class Refeicao {
         return quantidade;
     }
 
+    public void setQuantidade(int quantidade) {
+        this.quantidade = quantidade;
+    }
 }

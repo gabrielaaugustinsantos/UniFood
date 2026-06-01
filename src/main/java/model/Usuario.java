@@ -7,13 +7,22 @@ public class Usuario {
     private String matricula;
     private String email;
     private String senha;
+    private double saldo;
 
-    public Usuario(int id, String nome, String matricula, String email, String senha) {
+    public Usuario(
+            int id,
+            String nome,
+            String matricula,
+            String email,
+            String senha,
+            double saldo
+    ) {
         this.id = id;
         this.nome = nome;
         this.matricula = matricula;
         this.email = email;
         this.senha = senha;
+        this.saldo = saldo;
     }
 
     public int getId() {
@@ -34,5 +43,13 @@ public class Usuario {
 
     public String getSenha() {
         return senha;
+    }
+
+    public double getSaldo() {
+        return saldo;
+    }
+
+    public void setSaldo(double saldo) {
+        this.saldo = saldo;
     }
 }
