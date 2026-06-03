@@ -1,21 +1,41 @@
 package handler;
 
+import java.util.List;
+
 import model.Refeicao;
 import repository.RefeicaoRepository;
 
 public class CardapioHandler {
 
-    private RefeicaoRepository repository = new RefeicaoRepository();
+    private RefeicaoRepository repository =
+            new RefeicaoRepository();
 
     public void listarCardapio() {
 
-        for (Refeicao refeicao : repository.listarRefeicoes()) {
+        List<Refeicao> refeicoes =
+                repository.listarRefeicoes();
 
-            System.out.println("Nome: " + refeicao.getNome());
-            System.out.println("Descrição: " + refeicao.getDescricao());
-            System.out.println("Valor: " + refeicao.getValor());
-            System.out.println("Quantidade: " + refeicao.getQuantidade());
-            System.out.println("----------------------");
-        }
+        System.out.println("\n===== CARDÁPIO =====");
+
+        for (int i = 0; i < refeicoes.size(); i++) {
+
+            Refeicao r = refeicoes.get(i);
+
+            System.out.println(
+                    "\n" + (i + 1) + " - " + r.getNome()
+            );
+
+            System.out.println(
+                    "Descrição: " + r.getDescricao()
+            );
+
+            System.out.println(
+                    "Valor: R$ " + r.getValor()
+            );
+
+            System.out.println(
+                    "Disponível: " + r.getQuantidade()
+            );
+}
     }
 }

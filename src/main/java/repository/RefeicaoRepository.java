@@ -7,29 +7,57 @@ import model.Refeicao;
 
 public class RefeicaoRepository {
 
-    public List<Refeicao> listarRefeicoes() {
+    private static List<Refeicao> refeicoes = new ArrayList<>();
 
-        List<Refeicao> lista = new ArrayList<>();
+    static {
 
-        lista.add(
-            new Refeicao(
-                "Arroz e Feijão",
-                "Prato tradicional",
-                3.50,
-                20
-            )
+        refeicoes.add(
+                new Refeicao(
+                        "Almoço Tradicional",
+                        "Arroz, feijão, carne bovina, salada e sobremesa",
+                        5.00,
+                        50
+                )
         );
 
-        lista.add(
-            new Refeicao(
-                "Frango Grelhado",
-                "Frango com legumes",
-                5.00,
-                15
-            )
+        refeicoes.add(
+                new Refeicao(
+                        "Almoço Vegetariano",
+                        "Arroz, feijão, hambúrguer de grão-de-bico, salada e sobremesa",
+                        5.00,
+                        30
+                )
         );
 
-        return lista;
+        refeicoes.add(
+                new Refeicao(
+                        "Janta Tradicional",
+                        "Arroz, feijão, frango grelhado, legumes refogados e fruta",
+                        4.50,
+                        40
+                )
+        );
+
+        refeicoes.add(
+                new Refeicao(
+                        "Janta Vegana",
+                        "Arroz integral, lentilha, legumes assados e salada",
+                        4.50,
+                        25
+                )
+        );
     }
 
+    public List<Refeicao> listarRefeicoes() {
+        return refeicoes;
+    }
+
+    public Refeicao buscarPorIndice(int indice) {
+
+        if (indice < 0 || indice >= refeicoes.size()) {
+            return null;
+        }
+
+        return refeicoes.get(indice);
+    }
 }
