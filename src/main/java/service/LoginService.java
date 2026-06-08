@@ -5,17 +5,25 @@ import repository.UsuarioRepository;
 
 public class LoginService {
 
-    private UsuarioRepository repository = new UsuarioRepository();
+    private UsuarioRepository repository =
+            new UsuarioRepository();
 
-    public boolean validarLogin(String email, String senha) {
+    public Usuario autenticar(
+            String email,
+            String senha
+    ) {
 
-        Usuario usuario = repository.buscarPorEmail(email);
+        Usuario usuario =
+                repository.buscarPorEmail(email);
 
         if (usuario == null) {
-
-            return false;
+            return null;
         }
 
-        return usuario.getSenha().equals(senha);
+        if (!usuario.getSenha().equals(senha)) {
+            return null;
+        }
+
+        return usuario;
     }
 }

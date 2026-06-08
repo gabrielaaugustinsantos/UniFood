@@ -1,9 +1,13 @@
+import java.time.LocalDate;
+import java.util.Scanner;
+
 import handler.CardapioHandler;
 import handler.RelatorioHandler;
 import model.HistoricoConsumo;
 import model.Refeicao;
 import model.Usuario;
 import repository.HistoricoRepository;
+import repository.RefeicaoRepository;
 import service.ConsumoService;
 import service.LoginService;
 import service.RelatorioService;
@@ -13,91 +17,258 @@ public class Main {
 
     public static void main(String[] args) {
 
-        UsuarioService service = new UsuarioService();
+        Scanner scanner = new Scanner(System.in);
 
-        Usuario usuario1 = new Usuario(
-                1,
-                "Gabriela",
-                "123",
-                "gabriela@email.com",
-                "123",
-                30.0
-        );
+        UsuarioService usuarioService =
+                new UsuarioService();
 
-        Usuario usuario2 = new Usuario(
-                2,
-                "Luize",
-                "456",
-                "luize@email.com",
-                "456",
-                20.0
-        );
+        LoginService loginService =
+                new LoginService();
 
-        service.cadastrarUsuario(usuario1);
-        service.cadastrarUsuario(usuario2);
-
-        // Teste de Login
-
-        LoginService loginService = new LoginService();
-
-        boolean login = loginService.validarLogin(
-                "gabriela@email.com",
-                "123"
-        );
-
-        System.out.println("Login realizado: " + login);
-
-        // Teste do Cardápio
-
-        CardapioHandler cardapio = new CardapioHandler();
-
-        cardapio.listarCardapio();
-
-        // Teste de Consumo de Refeição
-
-        Refeicao refeicao = new Refeicao(
-                "Almoço",
-                "Arroz, feijão e carne",
-                5.0,
-                10
-        );
-
-        ConsumoService consumoService = new ConsumoService();
-
-        consumoService.registrarConsumo(
-                usuario1,
-                refeicao
-        );
-
-        // Teste do Histórico e Relatório
+        ConsumoService consumoService =
+                new ConsumoService();
 
         HistoricoRepository historicoRepository =
                 new HistoricoRepository();
 
-        historicoRepository.adicionarHistorico(
-                new HistoricoConsumo(
-                        "Gabriela",
-                        "Almoço",
-                        "20/05/2026"
-                )
-        );
+        RefeicaoRepository refeicaoRepository =
+                new RefeicaoRepository();
 
-        historicoRepository.adicionarHistorico(
-                new HistoricoConsumo(
-                        "Luize",
-                        "Jantar",
-                        "20/05/2026"
-                )
-        );
+        Usuario usuarioLogado = null;
 
-        RelatorioService relatorioService =
-                new RelatorioService(historicoRepository);
+        boolean executando = true;
 
-        RelatorioHandler relatorioHandler =
-                new RelatorioHandler(relatorioService);
+        while (executando) {
 
-        relatorioHandler.exibirRelatorio();
+            System.out.println("\n===== UNIFOOD =====");
 
+            if (usuarioLogado != null) {
+
+                System.out.println(
+                        "Usuário logado: "
+                        + usuarioLogado.getNome()
+                );
+            }
+
+            System.out.println("1 - Cadastrar usuário");
+            System.out.println("2 - Login");
+            System.out.println("3 - Ver cardápio");
+            System.out.println("4 - Consumir refeição");
+            System.out.println("5 - Ver saldo");
+            System.out.println("6 - Relatório");
+            System.out.println("0 - Sair");
+
+            System.out.print("Opção: ");
+
+            int opcao = scanner.nextInt();
+            scanner.nextLine();
+
+            switch (opcao) {
+
+                case 1:
+
+                    try {
+
+                        System.out.print("ID: ");
+                        int id = scanner.nextInt();
+                        scanner.nextLine();
+
+                        System.out.print("Nome: ");
+                        String nome =
+                                scanner.nextLine();
+
+                        System.out.print("Matrícula: ");
+                        String matricula =
+                                scanner.nextLine();
+
+                        System.out.print("Email: ");
+                        String email =
+                                scanner.nextLine();
+
+                        System.out.print("Senha: ");
+                        String senha =
+                                scanner.nextLine();
+
+                        System.out.print("Saldo: ");
+                        double saldo =
+                                scanner.nextDouble();
+                        scanner.nextLine();
+
+                        Usuario usuario =
+                                new Usuario(
+                                        id,
+                                        nome,
+                                        matricula,
+                                        email,
+                                        senha,
+                                        saldo
+                                );
+
+                        usuarioService
+                                .cadastrarUsuario(usuario);
+
+                    } catch (Exception e) {
+
+                        System.out.println(
+                                e.getMessage()
+                        );
+                    }
+
+                    break;
+
+                case 2:
+
+                    System.out.print("Email: ");
+                    String emailLogin =
+                            scanner.nextLine();
+
+                    System.out.print("Senha: ");
+                    String senhaLogin =
+                            scanner.nextLine();
+
+                    usuarioLogado =
+                            loginService.autenticar(
+                                    emailLogin,
+                                    senhaLogin
+                            );
+
+                    if (usuarioLogado != null) {
+
+                        System.out.println(
+                                "Login realizado!"
+                        );
+
+                    } else {
+
+                        System.out.println(
+                                "Credenciais inválidas."
+                        );
+                    }
+
+                    break;
+
+                case 3:
+
+                    CardapioHandler cardapio =
+                            new CardapioHandler();
+
+                    cardapio.listarCardapio();
+
+                    break;
+
+                case 4:
+
+                    if (usuarioLogado == null) {
+
+                        System.out.println(
+                                "Faça login primeiro."
+                        );
+
+                        break;
+                    }
+
+                    CardapioHandler cardapioConsumo =
+                            new CardapioHandler();
+
+                    cardapioConsumo.listarCardapio();
+
+                    System.out.print(
+                            "Escolha a refeição: "
+                    );
+
+                    int escolha =
+                            scanner.nextInt();
+
+                    scanner.nextLine();
+
+                    Refeicao refeicao =
+                            refeicaoRepository
+                                    .buscarPorIndice(
+                                            escolha - 1
+                                    );
+
+                    if (refeicao == null) {
+
+                        System.out.println(
+                                "Refeição inválida."
+                        );
+
+                        break;
+                    }
+
+                    boolean sucesso =
+                            consumoService
+                                    .registrarConsumo(
+                                            usuarioLogado,
+                                            refeicao
+                                    );
+
+                    if (sucesso) {
+
+                        historicoRepository
+                                .adicionarHistorico(
+                                        new HistoricoConsumo(
+                                                usuarioLogado
+                                                        .getNome(),
+                                                refeicao
+                                                        .getNome(),
+                                                LocalDate.now()
+                                                        .toString()
+                                        )
+                                );
+                    }
+
+                    break;
+
+                case 5:
+
+                    if (usuarioLogado == null) {
+
+                        System.out.println(
+                                "Faça login primeiro."
+                        );
+
+                    } else {
+
+                        System.out.println(
+                                "Saldo atual: R$ "
+                                + usuarioLogado
+                                .getSaldo()
+                        );
+                    }
+
+                    break;
+
+                case 6:
+
+                    RelatorioService relatorioService =
+                            new RelatorioService(
+                                    historicoRepository
+                            );
+
+                    RelatorioHandler relatorioHandler =
+                            new RelatorioHandler(
+                                    relatorioService
+                            );
+
+                    relatorioHandler.exibirRelatorio();
+
+                    break;
+
+                case 0:
+
+                    executando = false;
+
+                    break;
+
+                default:
+
+                    System.out.println(
+                            "Opção inválida."
+                    );
+            }
+        }
+
+        scanner.close();
     }
-
 }
