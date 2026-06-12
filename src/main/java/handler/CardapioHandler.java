@@ -7,35 +7,53 @@ import repository.RefeicaoRepository;
 
 public class CardapioHandler {
 
-    private RefeicaoRepository repository =
-            new RefeicaoRepository();
+    private RefeicaoRepository repository;
+
+    public CardapioHandler(
+            RefeicaoRepository repository
+    ) {
+        this.repository = repository;
+    }
 
     public void listarCardapio() {
 
         List<Refeicao> refeicoes =
                 repository.listarRefeicoes();
 
-        System.out.println("\n===== CARDÁPIO =====");
+        System.out.println(
+                "\n===== CARDÁPIO ====="
+        );
 
-        for (int i = 0; i < refeicoes.size(); i++) {
+        for (
+                int i = 0;
+                i < refeicoes.size();
+                i++
+        ) {
 
-            Refeicao r = refeicoes.get(i);
+            Refeicao r =
+                    refeicoes.get(i);
 
             System.out.println(
-                    "\n" + (i + 1) + " - " + r.getNome()
+                    "\n" +
+                    (i + 1) +
+                    " - " +
+                    r.getNome()
             );
 
             System.out.println(
-                    "Descrição: " + r.getDescricao()
+                    "Descrição: "
+                    + r.getDescricao()
             );
 
             System.out.println(
-                    "Valor: R$ " + r.getValor()
+                    "Valor: R$ "
+                    + r.getValor()
             );
 
             System.out.println(
-                    "Disponível: " + r.getQuantidade()
+                    "Disponível: "
+                    + r.getQuantidade()
             );
-}
+        }
     }
 }

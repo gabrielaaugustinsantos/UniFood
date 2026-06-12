@@ -5,8 +5,13 @@ import repository.UsuarioRepository;
 
 public class UsuarioService {
 
-    private UsuarioRepository repository =
-            new UsuarioRepository();
+    private UsuarioRepository repository;
+
+    public UsuarioService(
+            UsuarioRepository repository
+    ) {
+        this.repository = repository;
+    }
 
     public void cadastrarUsuario(Usuario usuario) {
 
@@ -32,27 +37,33 @@ public class UsuarioService {
             );
         }
 
-        if (repository.buscarPorMatricula(
-                usuario.getMatricula()
-        ) != null) {
+        if (
+                repository.buscarPorMatricula(
+                        usuario.getMatricula()
+                ) != null
+        ) {
 
             throw new IllegalArgumentException(
                     "Matrícula já cadastrada."
             );
         }
 
-        if (repository.buscarPorEmail(
-                usuario.getEmail()
-        ) != null) {
+        if (
+                repository.buscarPorEmail(
+                        usuario.getEmail()
+                ) != null
+        ) {
 
             throw new IllegalArgumentException(
                     "Email já cadastrado."
             );
         }
 
-        if (repository.buscarPorId(
-                usuario.getId()
-        ) != null) {
+        if (
+                repository.buscarPorId(
+                        usuario.getId()
+                ) != null
+        ) {
 
             throw new IllegalArgumentException(
                     "ID já cadastrado."
@@ -74,4 +85,25 @@ public class UsuarioService {
 
         return repository.buscarPorEmail(email);
     }
+
+    public void adicionarSaldo(
+        Usuario usuario,
+        double valor
+        ) {
+
+        if (valor <= 0) {
+
+                throw new IllegalArgumentException(
+                        "O valor deve ser maior que zero."
+                );
+        }
+
+        usuario.setSaldo(
+                usuario.getSaldo() + valor
+        );
+
+        System.out.println(
+                "Saldo adicionado com sucesso!"
+        );
+        }
 }

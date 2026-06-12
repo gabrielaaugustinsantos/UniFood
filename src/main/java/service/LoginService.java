@@ -5,8 +5,13 @@ import repository.UsuarioRepository;
 
 public class LoginService {
 
-    private UsuarioRepository repository =
-            new UsuarioRepository();
+    private UsuarioRepository repository;
+
+    public LoginService(
+            UsuarioRepository repository
+    ) {
+        this.repository = repository;
+    }
 
     public Usuario autenticar(
             String email,
