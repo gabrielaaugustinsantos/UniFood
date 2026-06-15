@@ -1,16 +1,12 @@
-import java.time.LocalDate;
 import java.util.Scanner;
 
-import handler.CardapioHandler;
-import handler.RelatorioHandler;
-import model.HistoricoConsumo;
-import model.Refeicao;
+import controller.UniFoodController;
 import model.Usuario;
 import repository.HistoricoRepository;
 import repository.RefeicaoRepository;
+import repository.UsuarioRepository;
 import service.ConsumoService;
 import service.LoginService;
-import service.RelatorioService;
 import service.UsuarioService;
 
 public class Main {
@@ -19,20 +15,36 @@ public class Main {
 
         Scanner scanner = new Scanner(System.in);
 
-        UsuarioService usuarioService =
-                new UsuarioService();
-
-        LoginService loginService =
-                new LoginService();
-
-        ConsumoService consumoService =
-                new ConsumoService();
+        UsuarioRepository usuarioRepository =
+                new UsuarioRepository();
 
         HistoricoRepository historicoRepository =
                 new HistoricoRepository();
 
         RefeicaoRepository refeicaoRepository =
                 new RefeicaoRepository();
+
+        UsuarioService usuarioService =
+                new UsuarioService(
+                        usuarioRepository
+                );
+
+        LoginService loginService =
+                new LoginService(
+                        usuarioRepository
+                );
+
+        ConsumoService consumoService =
+                new ConsumoService();
+
+        UniFoodController controller =
+                new UniFoodController(
+                        usuarioService,
+                        loginService,
+                        consumoService,
+                        historicoRepository,
+                        refeicaoRepository
+                );
 
         Usuario usuarioLogado = null;
 
@@ -54,8 +66,9 @@ public class Main {
             System.out.println("2 - Login");
             System.out.println("3 - Ver cardápio");
             System.out.println("4 - Consumir refeição");
-            System.out.println("5 - Ver saldo");
-            System.out.println("6 - Relatório");
+            System.out.println("5 - Adicionar saldo");
+            System.out.println("6 - Ver saldo");
+            System.out.println("7 - Relatório");
             System.out.println("0 - Sair");
 
             System.out.print("Opção: ");
@@ -104,8 +117,9 @@ public class Main {
                                         saldo
                                 );
 
-                        usuarioService
-                                .cadastrarUsuario(usuario);
+                        controller.cadastrarUsuario(
+                                usuario
+                        );
 
                     } catch (Exception e) {
 
@@ -127,7 +141,7 @@ public class Main {
                             scanner.nextLine();
 
                     usuarioLogado =
-                            loginService.autenticar(
+                            controller.fazerLogin(
                                     emailLogin,
                                     senhaLogin
                             );
@@ -149,10 +163,7 @@ public class Main {
 
                 case 3:
 
-                    CardapioHandler cardapio =
-                            new CardapioHandler();
-
-                    cardapio.listarCardapio();
+                    controller.exibirCardapio();
 
                     break;
 
@@ -167,10 +178,7 @@ public class Main {
                         break;
                     }
 
-                    CardapioHandler cardapioConsumo =
-                            new CardapioHandler();
-
-                    cardapioConsumo.listarCardapio();
+                    controller.exibirCardapio();
 
                     System.out.print(
                             "Escolha a refeição: "
@@ -181,41 +189,17 @@ public class Main {
 
                     scanner.nextLine();
 
-                    Refeicao refeicao =
-                            refeicaoRepository
-                                    .buscarPorIndice(
-                                            escolha - 1
-                                    );
+                    boolean sucesso =
+                            controller.consumirRefeicao(
+                                    usuarioLogado,
+                                    escolha - 1
+                            );
 
-                    if (refeicao == null) {
+                    if (!sucesso) {
 
                         System.out.println(
-                                "Refeição inválida."
+                                "Não foi possível realizar o consumo."
                         );
-
-                        break;
-                    }
-
-                    boolean sucesso =
-                            consumoService
-                                    .registrarConsumo(
-                                            usuarioLogado,
-                                            refeicao
-                                    );
-
-                    if (sucesso) {
-
-                        historicoRepository
-                                .adicionarHistorico(
-                                        new HistoricoConsumo(
-                                                usuarioLogado
-                                                        .getNome(),
-                                                refeicao
-                                                        .getNome(),
-                                                LocalDate.now()
-                                                        .toString()
-                                        )
-                                );
                     }
 
                     break;
@@ -228,12 +212,34 @@ public class Main {
                                 "Faça login primeiro."
                         );
 
-                    } else {
+                        break;
+                    }
+
+                    try {
+
+                        System.out.print(
+                                "Valor para adicionar: R$ "
+                        );
+
+                        double valor =
+                                scanner.nextDouble();
+
+                        scanner.nextLine();
+
+                        usuarioService.adicionarSaldo(
+                                usuarioLogado,
+                                valor
+                        );
 
                         System.out.println(
-                                "Saldo atual: R$ "
-                                + usuarioLogado
-                                .getSaldo()
+                                "Novo saldo: R$ "
+                                + usuarioLogado.getSaldo()
+                        );
+
+                    } catch (Exception e) {
+
+                        System.out.println(
+                                e.getMessage()
                         );
                     }
 
@@ -241,23 +247,35 @@ public class Main {
 
                 case 6:
 
-                    RelatorioService relatorioService =
-                            new RelatorioService(
-                                    historicoRepository
-                            );
+                    if (usuarioLogado == null) {
 
-                    RelatorioHandler relatorioHandler =
-                            new RelatorioHandler(
-                                    relatorioService
-                            );
+                        System.out.println(
+                                "Faça login primeiro."
+                        );
 
-                    relatorioHandler.exibirRelatorio();
+                    } else {
+
+                        System.out.println(
+                                "Saldo atual: R$ "
+                                + usuarioLogado.getSaldo()
+                        );
+                    }
+
+                    break;
+
+                case 7:
+
+                    controller.exibirRelatorio();
 
                     break;
 
                 case 0:
 
                     executando = false;
+
+                    System.out.println(
+                            "Sistema encerrado."
+                    );
 
                     break;
 
